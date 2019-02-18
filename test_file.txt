@@ -1,5 +1,4 @@
 A Modified file.
-Added line
 Conflict resolved
 Added line by branch 2 
 Added line by branch 1
