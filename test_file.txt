@@ -1,2 +1,2 @@
 A Modified file . modified by branch1
-Modified by branch1
+Modified by branch2
