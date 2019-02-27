@@ -1,0 +1,69 @@
+*******Jenkins , Tomcat installation steps on AMI*******
+https://devops4solutions.com/installation-of-tomcat-on-aws-ec2-linux-integration-with-jenkins/
+*******Jenkins , Tomcat installation steps on AMI*******
+
+*******Java , Maven installation steps on AMI*******
+https://gist.github.com/gaquino/e41b946fd624355f37e9079a1c0792f5
+*******Java , Maven installation steps on AMI*******
+
+*********JAVA,MAVEN_HOME*********
+[ec2-user@ip-172-31-92-245 ~]$ mvn -version
+Apache Maven 3.5.2 (138edd61fd100ec658bfa2d307c43b76940a5d7d; 2017-10-18T07:58:13Z)
+Maven home: /usr/share/apache-maven
+Java version: 1.8.0_141, vendor: Oracle Corporation
+Java home: /usr/java/jdk1.8.0_141/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "4.14.97-74.72.amzn1.x86_64", arch: "amd64", family: "unix"
+*********JAVA,MAVEN_HOME*********
+
+*********MAVEN Deploymet Setup*********
+WAR deploy syntax :**/*.war
+The Tomcat user provided must have following roles: manager-gui , manager-script(since deploying requires user to be allowed to use the text-based Tomcat Manager)
+*********MAVEN Deploymet Setup*********
+
+*********MAven Central Repo*********
+Search if artifact exists:  https://search.maven.org/
+Maven Central Repo : https://repo.maven.apache.org/maven2/
+*********MAven Central Repo*********
+
+*********AWS*********
+(1) Server refused already generated RSA key for another instance:
+     (i) Open PuTTYGen, load your .PEM file. The public key appears in the box titled "Public key for pasting into OpenSSH authorized_keys file."
+         Note the SSH public key. You'll need the public key in a later step.
+    (ii) Return to the Amazon EC2 console and choose your instance.
+    (iii)Choose Actions, choose Instance Settings, and then choose View/Change User Data.
+    (iv) In the View/Change User Data dialog box, for User Data, type the following snippet.  
+            #cloud-config
+            ssh_deletekeys: false
+            ssh_authorized_keys:
+            - ssh-rsa ENTER YOUR PUBLIC KEY HERE ...
+            cloud_final_modules:
+            - [ssh, always]
+    (v) Choose Save.
+    (vi)Choose Actions, choose Instance State, and then choose Start.
+*********AWS*********
+
+*********SALTSTACK*********
+--INSTALLATION--
+(1) Install MASTER on one machine:
+    curl -L https://bootstrap.saltstack.com -o install-salt.sh
+    sudo sh install-salt.sh -M -A <Master's IP>
+
+(2) Adding a minion 
+    sudo sh install-salt.sh -A <Master's IP>
+
+(3) Accepting Minion
+    Find out Minion's status as well as it's ID:
+        sudo salt-key
+    (i) Check if the key fingerprint matches: 
+        [master]: sudo salt-key -f <minion_id>
+        [minion]: sudo salt-call --local key.finger
+    (ii) If both above key matches then:
+        [master]: sudo salt-key -a <minion_id>
+(4) Check connection
+    [master]: sudo salt '*' test.ping
+--INSTALLATION--
+Master-Minion comminication using TCP , ports 4505 & 4506
+Salt's Network Transport uses ZeroMQ -> MQ system -> Elliptic curve crytography by 4096 bit RSA key
+
+*********SALTSTACK*********
